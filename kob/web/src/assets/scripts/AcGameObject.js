@@ -50,7 +50,7 @@ export class AcGameObject {
 let last_timestamp;//上一次执行的时刻
 
 // 创建一个无限循环的动画帧调用。通过递归调用  requestAnimationFrame， step函数会在每次浏览器重绘之前被调用
-const step = last_timestamp => {
+const step = timestamp => {
     for (let obj of AC_GAME_OBJECTS) {//遍历值
         if (!obj.has_called_start) {//如果对象没有被执行过start函数
             obj.has_called_start = true;//记录已经被执行过了

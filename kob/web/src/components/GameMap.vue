@@ -41,7 +41,7 @@ import {ref, onMounted} from 'vue'
             // 2.2、然后才能在template里面用parent,canvas
         }
     }
-}
+
 </script>
 
 <style scoped>  
