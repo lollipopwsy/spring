@@ -48,18 +48,18 @@ export class GameMap extends AcGameObject {
         // // 画布的居中在GameMap.vue里面实现,用flex
 
         // 但我们想实现地图一浅一深格子的效果
-        const color_even= "#AAD751", color_odd="A2D149";
-        for (let r = 0; r < this.rows; r ++ ){
-            for (let c = 0; c < this.cols; c ++ ){
-                if((r+c)%2==0){
-                    this.ctx.fillStyle=color_even;
-                }
-                else{
-                    this.ctx.fillStyle=color_odd;
-                }
-                // 把当前小格子画出来，坐标系横着是x，纵着是y
-                this.ctx.fillRect(c*this.L, r*this.L, this.L, this.L);
+        const color_even= "#AAD751", color_odd="#A2D149";
+      for (let r = 0; r < this.rows; r ++ ){
+        for (let c = 0; c < this.cols; c ++ ){
+            if((r+c)%2==0){
+                this.ctx.fillStyle=color_even;
             }
+            else{
+                this.ctx.fillStyle=color_odd;
+            }
+            // 把当前小格子画出来，坐标系横着是x，纵着是y
+            this.ctx.fillRect(c*this.L, r*this.L, this.L, this.L);
         }
+      }
     }
 }
