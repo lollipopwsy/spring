@@ -9,7 +9,9 @@ const AC_GAME_OBJECTS = [];
 // 基类需要export出去
 export class AcGameObject {
     constructor() {
-        // 存储所有的游戏对象
+        // 存储所有的游戏对象，每创建一个就push一个，先创建先push,先创建的先执行,后执行的会把先执行的覆盖掉，这里可以解释为什么墙的颜色覆盖了地图的颜色
+        // 先有地图，再有墙，墙是在地图里面创建的
+        // 在GameMap.js里面的构造函数，继承了这个AcGameObject基类，所以在GameMap.js里面的super()就是要先执行AcGameObject的构造函数，优先加入到数组里面，再执行GameMap的构造函数，然后才是后面加入到数组里面的墙
         AC_GAME_OBJECTS.push(this);
         // 速度的概念，涉及到时间间隔
         this.timedelta = 0;
