@@ -25,9 +25,10 @@ export default {
 /* 设置长宽 */
 div.playground{
     width: 60vw;
+    /* 屏幕宽度的60 */
     height: 70vh;
-    /* 屏幕宽度的70% */
-    background-color: lightpink;
+    /* 屏幕高度的70% */
+    /* background-color: lightpink; */
     margin: 40px auto;
     /* 上下居中 */ 
 }
