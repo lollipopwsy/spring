@@ -28,7 +28,7 @@ export class Snake extends AcGameObject {
         
     }
 
-    update(){
+    updated(){
         this.render();
     }
 
