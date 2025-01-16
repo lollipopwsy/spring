@@ -6,6 +6,8 @@
 import { AcGameObject } from "./AcGameObject";
 // 创建墙，需要把墙引入进来
 import { Wall } from "./Wall";
+// 创建蛇，需要把蛇引入进来
+import { Snake } from "./Snake";
 
 export class GameMap extends AcGameObject {
     constructor(ctx, parent) {//传入两个元素，一个是画布，一个是父元素，父元素用来动态修改画布的长宽
@@ -19,7 +21,9 @@ export class GameMap extends AcGameObject {
         
         // 行数和列数，13*13的地图
         this.rows=13;
-        this.cols=13;
+        this.cols=14;
+        // 调整地图的大小，防止蛇头走到同一个格子
+        // 但这样地图就不轴对称了，但可以中心对称
 
         // 在gamemap里面实现画墙
         // 这里开个数组存墙
@@ -27,6 +31,12 @@ export class GameMap extends AcGameObject {
         // 存内部障碍物数量
         this.inner_walls_count=20;
 
+        // 创建蛇,同时要引入蛇
+        this.snakes=[
+            // 蛇也需要传入对象，存储蛇的各种信息id,color,r，以及当前的地图gamemap
+            new Snake({id:0,color:"#4876EC",r:this.rows-2,c:1},this),
+            new Snake({id:1,color:"#F94848",r:1,c:this.cols-2},this),
+        ]
     }
 
     // 判断地图是否联通的函数,参考算法基础课的迷宫问题和flood fill算法
@@ -83,12 +93,21 @@ export class GameMap extends AcGameObject {
                 let r=parseInt(Math.random()*this.rows);
                 // 列的随机值
                 let c=parseInt(Math.random()*this.cols);
+
                 // 判断一下当前这个位置有没有障碍物，有的话就继续循环
-                if(g[r][c] || g[c][r]) continue;
+                // 这是障碍物轴对称
+                // if(g[r][c] || g[c][r]) continue;
+                // 修改为中心对称
+                if(g[r][c]||g[this.rows-1-r][this.cols-1-c]) continue;
+
                 // 如果障碍物在左上角或者右上角，即两条蛇的起始位置，就继续循环
                 if((r==this.rows-2&&c==1)||(r==1&&c==this.cols-2)) continue;
+
                 // 否则的话，就把这个位置设置为true
-                g[r][c] = g[c][r] = true;
+                // g[r][c] = g[c][r] = true;
+                // 这里也修改为中心对称
+                g[r][c] = g[this.rows-1-r][this.cols-1-c] = true;
+
                 break;
             }
         }
@@ -118,7 +137,7 @@ export class GameMap extends AcGameObject {
         // // 调用一下创建墙的函数
         // this.create_walls();
 
-        // 防止浏览器崩掉，这里设置一个循环，如果创建墙失败，就继续创建
+        // 防止浏览器崩掉，这里设置一个一千次循环，如果创建墙失败，就继续创建
         for (let i = 0; i < 1000; i ++ ){
             if(this.create_walls()) break;
         }
