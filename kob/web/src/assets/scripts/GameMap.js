@@ -133,6 +133,26 @@ export class GameMap extends AcGameObject {
         // 如果不联通，可以在上面写一个判断函数判断是否联通
     }
 
+    // 写一个辅助函数来为canvas绑定一个获取用户输入信息的事件
+    add_listening_events() {
+        // canvas获取用户输入,这里需要先将canvas聚焦
+        this.ctx.canvas.focus();
+
+        // 先取出两个蛇
+        const [snake0, snake1] = this.snakes;
+        // 获取信息有一个api
+        this.ctx.canvas.addEventListener("keydown", e => {
+            if(e.key==='w') snake0.set_direction(0);//上是0
+            else if(e.key==='d') snake0.set_direction(1);//右是1
+            else if(e.key==='s') snake0.set_direction(2);//下是2
+            else if(e.key==='a') snake0.set_direction(3);//左是3
+            else if(e.key==='ArrowUp') snake1.set_direction(0);//上是0
+            else if(e.key==='ArrowRight') snake1.set_direction(1);//右是1
+            else if(e.key==='ArrowDown') snake1.set_direction(2);//下是2
+            else if(e.key==='ArrowLeft') snake1.set_direction(3);//左是3
+        });
+    }
+
     start() {   //只执行一次
         // // 调用一下创建墙的函数
         // this.create_walls();
@@ -141,6 +161,7 @@ export class GameMap extends AcGameObject {
         for (let i = 0; i < 1000; i ++ ){
             if(this.create_walls()) break;
         }
+        this.add_listening_events();
     }
 
     // 接GameMap.vue之后，在这里写一个辅助函数，用来更新地图大小
@@ -153,10 +174,33 @@ export class GameMap extends AcGameObject {
         this.ctx.canvas.height=this.L*this.rows;
     }
 
+    check_ready() {  //判断两条蛇是否都准备好了下一回合
+        for(const snake of this.snakes){
+            // 判断蛇的状态，如果不是idle，就返回false,要把当前走完再走下一个
+            if(snake.status!=="idle") return false;
+            // 如果还没有接收到下一步指令，就返回false
+            if(snake.direction===-1) return false;
+        }
+        // 如果两个蛇都准备好了，就返回true
+        return true;
+    }
+
+    // 让两条蛇进入下一回合
+    next_step(){
+        // 遍历,让每条蛇进入下一回合
+        for(const snake of this.snakes){
+            snake.next_step();
+        }
+    }
+
     // 每一帧都要更新地图大小
 
     updated() {  //除了第一次之外，每一帧执行一次
         this.update_size();
+        // 如果两条蛇都准备好了，就让他们走下一步
+        if(this.check_ready()){
+            this.next_step();
+        }
         this.render();
     }
 
