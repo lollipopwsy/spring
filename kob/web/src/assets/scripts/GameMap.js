@@ -133,6 +133,26 @@ export class GameMap extends AcGameObject {
         // 如果不联通，可以在上面写一个判断函数判断是否联通
     }
 
+    // 写一个辅助函数来为canvas绑定一个获取用户输入信息的事件
+    add_listening_events() {
+        // canvas获取用户输入,这里需要先将canvas聚焦
+        this.ctx.canvas.focus();
+
+        // 先取出两个蛇
+        const [snake0, snake1] = this.snakes;
+        // 获取信息有一个api
+        this.ctx.canvas.addEventListener("keydown", e => {
+            if(e.key==='w') snake0.set_direction(0);//上是0
+            else if(e.key==='d') snake0.set_direction(1);//右是1
+            else if(e.key==='s') snake0.set_direction(2);//下是2
+            else if(e.key==='a') snake0.set_direction(3);//左是3
+            else if(e.key==='ArrowUp') snake1.set_direction(0);//上是0
+            else if(e.key==='ArrowRight') snake1.set_direction(1);//右是1
+            else if(e.key==='ArrowDown') snake1.set_direction(2);//下是2
+            else if(e.key==='ArrowLeft') snake1.set_direction(3);//左是3
+        });
+    }
+
     start() {   //只执行一次
         // // 调用一下创建墙的函数
         // this.create_walls();
