@@ -142,10 +142,10 @@ export class GameMap extends AcGameObject {
         const [snake0, snake1] = this.snakes;
         // 获取信息有一个api
         this.ctx.canvas.addEventListener("keydown", e => {
-            if(e.key==='w') snake0.set_direction(0);//上是0
-            else if(e.key==='d') snake0.set_direction(1);//右是1
-            else if(e.key==='s') snake0.set_direction(2);//下是2
-            else if(e.key==='a') snake0.set_direction(3);//左是3
+            if(e.key==='i') snake0.set_direction(0);//上是0
+            else if(e.key==='l') snake0.set_direction(1);//右是1
+            else if(e.key==='k') snake0.set_direction(2);//下是2
+            else if(e.key==='j') snake0.set_direction(3);//左是3
             else if(e.key==='ArrowUp') snake1.set_direction(0);//上是0
             else if(e.key==='ArrowRight') snake1.set_direction(1);//右是1
             else if(e.key==='ArrowDown') snake1.set_direction(2);//下是2
