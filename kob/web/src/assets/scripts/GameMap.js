@@ -36,7 +36,7 @@ export class GameMap extends AcGameObject {
             // 蛇也需要传入对象，存储蛇的各种信息id,color,r，以及当前的地图gamemap
             new Snake({id:0,color:"#4876EC",r:this.rows-2,c:1},this),
             new Snake({id:1,color:"#F94848",r:1,c:this.cols-2},this),
-        ]
+        ];
     }
 
     // 判断地图是否联通的函数,参考算法基础课的迷宫问题和flood fill算法
@@ -195,7 +195,7 @@ export class GameMap extends AcGameObject {
 
     // 每一帧都要更新地图大小
 
-    updated() {  //除了第一次之外，每一帧执行一次
+    update() {  //除了第一次之外，每一帧执行一次
         this.update_size();
         // 如果两条蛇都准备好了，就让他们走下一步
         if(this.check_ready()){

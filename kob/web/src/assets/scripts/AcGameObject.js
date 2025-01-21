@@ -23,7 +23,7 @@ export class AcGameObject {
         
     }
 
-    updated() {  //除了第一次之外，每一帧执行一次
+    update() {  //除了第一次之外，每一帧执行一次
         
     }
 
@@ -33,7 +33,7 @@ export class AcGameObject {
     }
 
     destroy() {
-        this.on_destory();
+        this.on_destroy();
         // 删除之前执行on_destroy，方法：在删除里面调用
 
         for (let i in AC_GAME_OBJECTS) {//遍历下标
@@ -59,7 +59,7 @@ const step = timestamp => {
             obj.start();//执行start方法（只一次）
         }else{//已经被执行过start函数了
             obj.timedelta = timestamp - last_timestamp;//先计算时间间隔 = 当前时刻 - 上一次执行的时刻
-            obj.updated();//已经被执行过了，执行updated方法
+            obj.update();//已经被执行过了，执行updated方法
         }
     }
 
