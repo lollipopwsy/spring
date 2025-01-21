@@ -6,8 +6,9 @@
     <!-- 3、这样parent就可以指向div了 -->
         <!-- 游戏画到一个canvas里面 ,画布：Canvas API提供了一个通过JavaScript 和 HTML的<canvas>元素来绘制图形的方式。它可以用于动画、游戏画面、数据可视化、图片编辑以及实时视频处理等方面。
 Canvas AP| 主要聚焦于 2D 图形。而同样使用canvas元素的 WebGL API 则用于绘制硬件加速的 2D 和3D 图形。-->
-        <canvas ref="canvas"></canvas>
+        <canvas ref="canvas" tabindex="0"></canvas>
         <!-- 3、这样下面的canvas就能和这里的canvas产生关联了 -->
+         <!-- 这里给canvas加了一个属性tabindex="0" ,因为在蛇的移动时需要接收后端的方向指令,但没做到后端,所以在前端设置,需要在gamemap.js里写一个辅助函数给canvas绑定一个获取用户输入信息的事件-->
     </div>
 </template>
 
@@ -20,27 +21,27 @@ import {GameMap} from '@/assets/scripts/GameMap.js'
 import {ref, onMounted} from 'vue'
 
 // 2.2、然后export一个default
-    export default {
-        setup(){
-            // 2.2、定义两个变量
-            let parent = ref(null);
-            let canvas = ref(null);
+export default {
+    setup(){
+        // 2.2、定义两个变量
+        let parent = ref(null);
+        let canvas = ref(null);
 
-            // 4、在整个组件挂载完之后要创建游戏对象
-            onMounted(()=>{
-                // 4.2、组件挂载完之后需要创建一个gamemap游戏对象
-                new GameMap(canvas.value.getContext('2d'),parent.value);
-                // 4.3、接下来在GameMap.js里面就能动态计算当前内部矩形的最大边长了。外部矩形是playground会跟随浏览器大小变化，在GameMap.js里写一个算法，让内部矩形的边长最大
-            })
+        // 4、在整个组件挂载完之后要创建游戏对象
+        onMounted(()=>{
+            // 4.2、组件挂载完之后需要创建一个gamemap游戏对象
+            new GameMap(canvas.value.getContext('2d'),parent.value);
+            // 4.3、接下来在GameMap.js里面就能动态计算当前内部矩形的最大边长了。外部矩形是playground会跟随浏览器大小变化，在GameMap.js里写一个算法，让内部矩形的边长最大
+        })
 
-            // 2.2、然后返回
-            return {
-                parent,
-                canvas
-            }
-            // 2.2、然后才能在template里面用parent,canvas
+        // 2.2、然后返回
+        return {
+            parent,
+            canvas
         }
+        // 2.2、然后才能在template里面用parent,canvas
     }
+}
 
 </script>
 
