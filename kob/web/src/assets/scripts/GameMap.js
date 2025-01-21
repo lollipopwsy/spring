@@ -36,7 +36,7 @@ export class GameMap extends AcGameObject {
             // 蛇也需要传入对象，存储蛇的各种信息id,color,r，以及当前的地图gamemap
             new Snake({id:0,color:"#4876EC",r:this.rows-2,c:1},this),
             new Snake({id:1,color:"#F94848",r:1,c:this.cols-2},this),
-        ]
+        ];
     }
 
     // 判断地图是否联通的函数,参考算法基础课的迷宫问题和flood fill算法
@@ -142,10 +142,10 @@ export class GameMap extends AcGameObject {
         const [snake0, snake1] = this.snakes;
         // 获取信息有一个api
         this.ctx.canvas.addEventListener("keydown", e => {
-            if(e.key==='w') snake0.set_direction(0);//上是0
-            else if(e.key==='d') snake0.set_direction(1);//右是1
-            else if(e.key==='s') snake0.set_direction(2);//下是2
-            else if(e.key==='a') snake0.set_direction(3);//左是3
+            if(e.key==='i') snake0.set_direction(0);//上是0
+            else if(e.key==='l') snake0.set_direction(1);//右是1
+            else if(e.key==='k') snake0.set_direction(2);//下是2
+            else if(e.key==='j') snake0.set_direction(3);//左是3
             else if(e.key==='ArrowUp') snake1.set_direction(0);//上是0
             else if(e.key==='ArrowRight') snake1.set_direction(1);//右是1
             else if(e.key==='ArrowDown') snake1.set_direction(2);//下是2
@@ -161,6 +161,7 @@ export class GameMap extends AcGameObject {
         for (let i = 0; i < 1000; i ++ ){
             if(this.create_walls()) break;
         }
+        this.add_listening_events();
     }
 
     // 接GameMap.vue之后，在这里写一个辅助函数，用来更新地图大小
@@ -173,10 +174,33 @@ export class GameMap extends AcGameObject {
         this.ctx.canvas.height=this.L*this.rows;
     }
 
+    check_ready() {  //判断两条蛇是否都准备好了下一回合
+        for(const snake of this.snakes){
+            // 判断蛇的状态，如果不是idle，就返回false,要把当前走完再走下一个
+            if(snake.status!=="idle") return false;
+            // 如果还没有接收到下一步指令，就返回false
+            if(snake.direction===-1) return false;
+        }
+        // 如果两个蛇都准备好了，就返回true
+        return true;
+    }
+
+    // 让两条蛇进入下一回合
+    next_step(){
+        // 遍历,让每条蛇进入下一回合
+        for(const snake of this.snakes){
+            snake.next_step();
+        }
+    }
+
     // 每一帧都要更新地图大小
 
-    updated() {  //除了第一次之外，每一帧执行一次
+    update() {  //除了第一次之外，每一帧执行一次
         this.update_size();
+        // 如果两条蛇都准备好了，就让他们走下一步
+        if(this.check_ready()){
+            this.next_step();
+        }
         this.render();
     }
 

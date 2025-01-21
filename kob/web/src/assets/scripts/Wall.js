@@ -16,7 +16,7 @@ export class Wall extends AcGameObject {
     }
 
     // 墙需要渲染，每一帧60次
-    updated() {
+    update() {
         this.render();
     }
 
