@@ -6,8 +6,9 @@
     <!-- 3、这样parent就可以指向div了 -->
         <!-- 游戏画到一个canvas里面 ,画布：Canvas API提供了一个通过JavaScript 和 HTML的<canvas>元素来绘制图形的方式。它可以用于动画、游戏画面、数据可视化、图片编辑以及实时视频处理等方面。
 Canvas AP| 主要聚焦于 2D 图形。而同样使用canvas元素的 WebGL API 则用于绘制硬件加速的 2D 和3D 图形。-->
-        <canvas ref="canvas"></canvas>
+        <canvas ref="canvas" tabindex="0"></canvas>
         <!-- 3、这样下面的canvas就能和这里的canvas产生关联了 -->
+         <!-- 这里给canvas加了一个属性tabindex="0" ,因为在蛇的移动时需要接收后端的方向指令,但没做到后端,所以在前端设置,需要在gamemap.js里写一个辅助函数给canvas绑定一个获取用户输入信息的事件-->
     </div>
 </template>
 
