@@ -73,7 +73,7 @@ export class Snake extends AcGameObject {
     }
 
     // 蛇的移动实现,只需要在蛇头前面新增一个新的"球"
-    updated_move(){
+    update_move(){
         // 蛇头每秒钟向右移动五个格子：蛇头的横坐标加上每一帧移动的距离,速度*每两帧之间的时间,在AcGameObject里面定义了时间，单位是毫秒，需要在这里/1000转换成秒
         // this.cells[0].x+=this.speed*this.timedelta/1000;
         // 向上用y，-=
@@ -98,10 +98,10 @@ export class Snake extends AcGameObject {
         }
     }
 
-    updated(){//每一帧执行一次
-        // 蛇的移动不是每一次都执行,只有在move状态下才执行updated_move
+    update(){//每一帧执行一次
+        // 蛇的移动不是每一次都执行,只有在move状态下才执行update_move
         if(this.status==='move'){
-            this.updated_move();
+            this.update_move();
         }
         
         this.render();
