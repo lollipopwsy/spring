@@ -193,6 +193,25 @@ export class GameMap extends AcGameObject {
         }
     }
 
+    check_valid(cell){//检测目标位置是否合法，即没有撞到两条蛇的身体和墙
+        // 先枚举障碍物墙
+        for(const wall of this.walls){
+            if(wall.r===cell.r && wall.c===cell.c) return false;
+        }
+        // 再枚举两条蛇的身体
+        for(const snake of this.snakes){
+            // 特判一下蛇尾，会不会蛇头追到蛇尾，分两种：蛇尾增长下一步走蛇尾就不变，蛇尾不增长下一步走蛇尾就会缩，所以可以走
+            let k=snake.cells.length;//蛇的长度
+            if(!snake.check_tail_increasing()){//蛇尾不增长的情况，蛇尾会往前缩一个,此时蛇尾不用判断
+                k--;
+            }
+            for(let i=0;i<k;i++){
+                if(cell.r===snake.cells[i].r && cell.c===snake.cells[i].c) return false;//如果撞到蛇的身体，就返回false
+            }
+        }
+        return true;//如果没有撞到蛇的身体和墙，就返回true
+    }
+
     // 每一帧都要更新地图大小
 
     update() {  //除了第一次之外，每一帧执行一次
