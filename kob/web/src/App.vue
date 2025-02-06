@@ -15,12 +15,30 @@ import NavBar from './components/NavBar.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap"
 
+import $ from 'jquery';
+
 // import $ from 'jquery';
 // import { ref } from 'vue';
 // // 导入Vue的ref函数，用于创建响应式变量。
 export default {
   components: {
     NavBar
+  },
+  setup(){
+    $.ajax({
+      url: "http://localhost:3000/user/accout/token/",
+      type: "post",
+      data:{
+        username:'wsy',
+        password:'123',
+      },
+      success(resp){
+        console.log(resp);
+      },
+      error(resp){
+        console.log(resp);
+      }
+    });
   }
 }
 
