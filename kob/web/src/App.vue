@@ -26,7 +26,7 @@ export default {
   },
   setup(){
     $.ajax({
-      url: "http://localhost:3000/user/accout/token/",
+      url: "http://localhost:3000/user/account/token/",
       type: "post",
       data:{
         username:'wsy',
@@ -39,6 +39,37 @@ export default {
         console.log(resp);
       }
     });
+
+    $.ajax({
+        url: "http://localhost:3000/user/account/info/",
+        type: "get",
+        //数据库上传需要上传表头
+        headers:{
+          Authorization: "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0NWQxOWE1OGJkN2E0NmJkYWIyMjE5NmM5YmZmYmI5MiIsInN1YiI6IjEiLCJpc3MiOiJzZyIsImlhdCI6MTczODkzOTI3MCwiZXhwIjoxNzQwMTQ4ODcwfQ.MzEmYi_3-vpkU_VKxsP1BGpGQQMKrADU8TSI2ic0t5g"
+        },
+        success(resp){
+          console.log(resp);
+        },
+        error(resp){
+          console.log(resp);
+        }
+    })
+
+    $.ajax({
+      url: "http://localhost:3000/user/account/register/",
+      type: "post",
+      data:{
+        username:'',
+        password:'123',
+        confirmedPassword:'123',
+      },
+      success(resp){
+        console.log(resp);
+      },
+      error(resp){
+        console.log(resp);
+      }
+    })
   }
 }
 

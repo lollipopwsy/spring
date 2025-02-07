@@ -15,7 +15,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/user/accout/token/")//公开页面一定要放行
+    @PostMapping("/user/account/token/")//公开页面一定要放行
 //    定义一下函数
     public Map<String, String> getToken(@RequestParam Map<String, String> map){//需要传入两个信息，从post里面把两个参数拿出来放到一个map字典里面,需要加一个注解@RequestParam
 //        从map中取出
