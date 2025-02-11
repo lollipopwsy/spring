@@ -5,6 +5,9 @@ import RecordIndexView from '../views/record/RecordIndexView'
 import RanklistIndexView from '../views/ranklist/RanklistIndexView'
 import UserBotIndexView from '../views/user/bot/UserBotIndexView'
 import NotFound from '../views/error/NotFound'
+// user的前端
+import UserAccountLoginView from '@/views/user/account/UserAccountLoginView.vue'
+import UserAccountRegisterView from '@/views/user/account/UserAccountRegisterView.vue'
 
 const routes = [
   {
@@ -38,8 +41,18 @@ const routes = [
     component:NotFound,
   },
   {
-    path:"/:catchAll(.*)",
+    path:"/:catchAll(.*)",//这是一个通配符，匹配所有路径
     redirect:"/404/"
+  },
+  {
+    path:"/user/account/login/",
+    name:"user_account_login",
+    component:UserAccountLoginView,
+  },
+  {
+    path:"/user/account/register/",
+    name:"user_account_register",
+    component:UserAccountRegisterView,
   },
 ]
 
