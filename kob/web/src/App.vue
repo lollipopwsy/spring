@@ -43,7 +43,7 @@ export default {
     // $.ajax({
     //     url: "http://localhost:3000/user/account/info/",
     //     type: "get",
-    //     //数据库上传需要上传表头
+    //     //数据库上传需要上传表头,只有SecurityConfig里面授权的不需要加表头，其他的都需要加表头
     //     headers:{
     //       Authorization: "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0NWQxOWE1OGJkN2E0NmJkYWIyMjE5NmM5YmZmYmI5MiIsInN1YiI6IjEiLCJpc3MiOiJzZyIsImlhdCI6MTczODkzOTI3MCwiZXhwIjoxNzQwMTQ4ODcwfQ.MzEmYi_3-vpkU_VKxsP1BGpGQQMKrADU8TSI2ic0t5g"
     //     },

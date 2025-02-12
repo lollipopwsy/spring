@@ -9,6 +9,9 @@ export default {
         photo:"",
         token:"",
         is_login:false,
+
+        // 全局变量表示当前是否在拉取信息中，如果是拉取信息中，就不展示
+        pulling_info:true,
     },
     getters: {
     },
@@ -29,6 +32,10 @@ export default {
             state.token = ""//清空token
             state.is_login = false//登录状态设置为false
         },
+        // 更新拉取信息状态
+        updatePullingInfo(state,pulling_info){
+            state.pulling_info = pulling_info
+        }
     },
     actions: {//一般修改state的函数写在action里面
         login(context,data){//data包含用户输入的登录信息，context是上下文信息
@@ -41,6 +48,8 @@ export default {
                   password:data.password,
                 },
                 success(resp){//成功的话需要将token存下来
+                    // 浏览器登录信息持久化，存在localStorage里面
+                    localStorage.setItem("jwt_token",resp.token);
                     if(resp.error_message==="success"){//登录成功,这里的error_message是后端LoginServiceImpl定义的字段
                         context.commit("updateToken",resp.token)//action里的函数调用mutation里的函数需要用到commit，这里的resp.token是后端LoginServiceImpl返回的token
                         data.success(resp);//调用成功的回调函数
@@ -58,7 +67,7 @@ export default {
             $.ajax({
                 url: "http://localhost:3000/user/account/info/",
                 type: "get",
-                //数据库上传需要上传表头
+                //数据库上传需要上传表头，只有SecurityConfig里面授权的不需要加表头，其他的都需要加表头
                 headers:{
                     Authorization: "Bearer " + context.state.token,
                 },
@@ -82,6 +91,8 @@ export default {
         },
         logout(context){
             //退出登录
+            // 删除localStorage里的token
+            localStorage.removeItem("jwt_token");
             context.commit("logout");//调用mutation里的logout函数
         }
     },

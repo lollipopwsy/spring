@@ -1,5 +1,5 @@
 <template>
-    <ContentField>
+    <ContentField v-if="!$store.state.user.pulling_info">
         <!-- 登录 -->
         <!-- 在Bootstrap里找grid -->
         <!-- div.row>div.col-3，然后tab键补全 -->
@@ -45,6 +45,28 @@
             let username=ref('');
             let password=ref('');
             let error_message=ref('');
+            
+            // let show_content=ref(false);//默认不展示登录页面
+
+            // 登录页面持久化，将token存在localStorage里面，每次重定向到登陆页面时，先判断本地有没有存token
+            const jwt_token=localStorage.getItem("jwt_token");//本地把token取出来
+            if(jwt_token){//如果存在token，就存到内存
+                store.commit("updateToken",jwt_token);//调用mutations里的函数要用commit
+                // 验证token是否合法，就是从云端获取用户信息
+                store.dispatch("getinfo",{//调用actions里的getinfo函数，用dispatch
+                    success(){
+                        router.push({name:'home'});//成功直接跳转到主页，但这种情况下会一闪而过登录页面，改进：先默认不展示登录页面，再写一个判断语句决定是否展示登录页面
+                        store.commit("updatePullingInfo",false);//拉取结束用false，调用Mutation里的updatePullingInfo函数，用commit
+                    },
+                    error(){
+                        // show_content.value=true;//如果获取失败，就展示登录页面
+                        store.commit("updatePullingInfo",false);//拉取结束用false，调用Mutation里的updatePullingInfo函数，用commit
+                    }
+                })
+            }else{
+                // show_content.value=true;//如果本地没有token，就展示登录页面
+                store.commit("updatePullingInfo",false);//拉取结束用false，调用Mutation里的updatePullingInfo函数，用commit
+            }
 
             //定义一个点击提交button后触发登录的函数
             const login=()=>{
@@ -61,7 +83,6 @@
                             success(){
                                 // 登录成功后跳转到主页
                                 router.push({name:'home'});
-                                console.log(store.state.user);
                             }
                         })
                     },
@@ -76,6 +97,7 @@
                 password,
                 error_message,
                 login,
+                // show_content,//返回
             }
 
         }

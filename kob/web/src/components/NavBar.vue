@@ -26,7 +26,7 @@
         </li>
       </ul>
       <ul class="navbar-nav" v-if="$store.state.user.is_login">
-      <!-- v-if判断是否登录，如果登录则显示用户名，否则显示登录和注册 -->
+      <!-- v-if判断是否登录，如果登录则右上角显示用户名，否则显示登录和注册 -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{$store.state.user.username}}
@@ -40,8 +40,9 @@
           </ul>
         </li>
       </ul>
-      <ul class="navbar-nav" v-else>
+      <ul class="navbar-nav" v-else-if="!$store.state.user.pulling_info">
       <!-- v-else判断登录不成功的情况显示登录和注册 -->
+      <!-- v-else-if拉取结束，则显示登录和注册 -->
         <li class="nav-item">
           <router-link class="nav-link" :to="{name:'user_account_login'}" role="button">
           <!-- 把a换成router-link来实现点击登录跳转到登录页面 -->
