@@ -25,17 +25,34 @@
           <router-link :class="route_name=='ranklist_index' ? 'nav-link active': 'nav-link'" :to="{name:'ranklist_index'}">排行榜</router-link>
         </li>
       </ul>
-      <ul class="navbar-nav">
+      <ul class="navbar-nav" v-if="$store.state.user.is_login">
+      <!-- v-if判断是否登录，如果登录则右上角显示用户名，否则显示登录和注册 -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Home
+            {{$store.state.user.username}}
           </a>
           <ul class="dropdown-menu">
             <!-- <li><a class="dropdown-item" href="/user/bot/">我的Bot</a></li> -->
             <li><router-link class="dropdown-item" :to="{name:'user_bot_index'}">我的Bot</router-link></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">退出登录</a></li>
+            <li><a class="dropdown-item" href="#" @click="logout">退出登录</a></li>
+            <!-- @click="logout",点击退出登录时触发函数logout -->
           </ul>
+        </li>
+      </ul>
+      <ul class="navbar-nav" v-else-if="!$store.state.user.pulling_info">
+      <!-- v-else判断登录不成功的情况显示登录和注册 -->
+      <!-- v-else-if拉取结束，则显示登录和注册 -->
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{name:'user_account_login'}" role="button">
+          <!-- 把a换成router-link来实现点击登录跳转到登录页面 -->
+            登录
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{name:'user_account_register'}" role="button">
+            注册
+          </router-link>
         </li>
       </ul>
     </div>
@@ -49,14 +66,25 @@
     import { computed } from 'vue';
     // 实时计算函数computed来实时计算
 
+    // 退出登录事件要import一个useStore
+    import { useStore } from 'vuex';
+
     export default {
         setup() {
+            const store = useStore();
+
             const route = useRoute();
             // 通过useRoute()获取当前route
             let route_name = computed(() => route.name);
             // 通过computed()实时返回route的name
+
+            // 退出登录添加事件
+            const logout = () => {//触发函数
+                store.dispatch('logout');
+            }
             return {
-                route_name
+                route_name,
+                logout
             }
         }
     }
