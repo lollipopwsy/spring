@@ -16,9 +16,51 @@
 
 <script>
     import ContentField from '../../../components/ContentField.vue'
+
+    // 调试
+    import $ from 'jquery'//引入ajax
+    import {useStore} from'vuex'//引入全局变量
+
     export default {
         components: {
             ContentField
+        },
+        setup(){
+            const store=useStore();
+            // $.ajax({
+            //     url:"http://localhost:3000/user/bot/add/",
+            //     type:"post",
+            //     data:{
+            //         title:"bot标题",
+            //         description:"bot描述",
+            //         content:"bot代码",
+            //     },
+            //     headers:{
+            //         Authorization:"Bearer " + store.state.user.token,
+            //     },
+            //     success(resp){
+            //         console.log(resp);
+            //     },
+            //     error(resp){
+            //         console.log(resp);
+            //     }
+            // })
+            $.ajax({
+                url:"http://localhost:3000/user/bot/remove/",
+                type:"post",
+                data:{
+                    bot_id:25,
+                },
+                headers:{
+                    Authorization:"Bearer " + store.state.user.token,
+                },
+                success(resp){
+                    console.log(resp);
+                },
+                error(resp){
+                    console.log(resp);
+                }
+            })
         }
     }
 </script>
