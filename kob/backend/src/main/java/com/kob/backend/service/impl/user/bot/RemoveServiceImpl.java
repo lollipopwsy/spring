@@ -36,8 +36,8 @@ public class RemoveServiceImpl implements RemoveService {
             map.put("error_message","bot不存在或已被删除");
             return map;
         }
-        System.out.println(bot.getUserId());
-        System.out.println(user1.getId());
+//        System.out.println(bot.getUserId());
+//        System.out.println(user1.getId());
         if(!bot.getUserId().equals(user1.getId())){
             map.put("error_message","没有权限删除该bot");
             return map;

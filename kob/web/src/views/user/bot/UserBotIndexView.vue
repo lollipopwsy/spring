@@ -45,12 +45,44 @@
             //         console.log(resp);
             //     }
             // })
+            // $.ajax({
+            //     url:"http://localhost:3000/user/bot/remove/",
+            //     type:"post",
+            //     data:{
+            //         bot_id:25,
+            //     },
+            //     headers:{
+            //         Authorization:"Bearer " + store.state.user.token,
+            //     },
+            //     success(resp){
+            //         console.log(resp);
+            //     },
+            //     error(resp){
+            //         console.log(resp);
+            //     }
+            // })
+            // $.ajax({
+            //     url:"http://localhost:3000/user/bot/update/",
+            //     type:"post",
+            //     data:{
+            //         bot_id:17,
+            //         title:"修改bot标题",
+            //         description:"修改bot描述",
+            //         content:"修改bot代码",
+            //     },
+            //     headers:{
+            //         Authorization:"Bearer " + store.state.user.token,
+            //     },
+            //     success(resp){
+            //         console.log(resp);
+            //     },
+            //     error(resp){
+            //         console.log(resp);
+            //     }
+            // })
             $.ajax({
-                url:"http://localhost:3000/user/bot/remove/",
-                type:"post",
-                data:{
-                    bot_id:25,
-                },
+                url:"http://localhost:3000/user/bot/getlist/",
+                type:"get",
                 headers:{
                     Authorization:"Bearer " + store.state.user.token,
                 },
