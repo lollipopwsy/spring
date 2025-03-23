@@ -16,7 +16,9 @@
 
     <!-- 对战里面，不用ContentField框，需要引入游戏界面，所以写了一个游戏界面的组件PlayGround -->
     <!-- 删掉了之前的ContentField -->
-    <PlayGround />
+    <PlayGround v-if="$store.state.pk.status==='playing'"/>
+    <!-- 当status是playing而不是matching时候展示 -->
+    <MatchGround v-if="$store.state.pk.status==='matching'"/>
 </template>
 
 <script>
@@ -31,9 +33,52 @@
 
     // 引入PlayGround组件
     import PlayGround from '../../components/PlayGround.vue'
+    // 引入MatchGround组件
+    import MatchGround from '../../components/MatchGround.vue'
+
+    // 当组件被挂载/卸载之后执行的函数
+    import { onMounted ,onUnmounted} from 'vue'
+    // 引入全局变量
+    import { useStore } from 'vuex'
+
     export default {
         components: {
-            PlayGround
+            PlayGround,
+            MatchGround,
+        },
+        setup(){
+            const store = useStore();
+            const socketUrl=`ws://localhost:3000/websocket/${store.state.user.token}/`;
+
+            let socket =null;
+            // 当当前组件被挂载的时候,创建链接，并把链接存到变量里
+            onMounted(()=>{
+                store.commit("updateOpponent",{
+                    username: "对手",
+                    photo: "https://cdn.acwing.com/media/article/image/2022/08/09/1_1db2488f17-anonymous.png",
+                });
+                // 创建socket
+                socket = new WebSocket(socketUrl);
+
+                socket.onopen=()=>{
+                    console.log("connected!");
+                }
+
+                socket.onmessage= msg =>{
+                    const data= JSON.parse(msg.data);
+
+                    console.log(data);
+                }
+
+                socket.onclose=()=>{
+                    console.log("disconnected!");
+                }
+            });
+
+            // 当当前组件被卸载的时候，关闭链接
+            onUnmounted(()=>{
+                socket.close();
+            });
         }
     }
 </script>
