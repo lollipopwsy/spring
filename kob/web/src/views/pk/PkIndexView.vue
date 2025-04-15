@@ -62,12 +62,24 @@
 
                 socket.onopen=()=>{
                     console.log("connected!");
+                    store.commit("updateSocket",socket);//更新socket
                 }
 
                 socket.onmessage= msg =>{
                     const data= JSON.parse(msg.data);
-
-                    console.log(data);
+                    // console.log(data);
+                    if(data.event==="start-matching"){//匹配成功
+                        store.commit("updateOpponent",{
+                            username: data.opponent_username,
+                            photo: data.opponent_photo,
+                        });//更新对手信息
+                        // 加个延迟
+                        setTimeout(()=>{
+                            store.commit("updateStatus","playing");//更新状态为playing
+                        },2000);
+                        // 更新地图
+                        store.commit("updateGamemap",data.gamemap);//更新地图
+                    }
                 }
 
                 socket.onclose=()=>{
@@ -75,9 +87,10 @@
                 }
             });
 
-            // 当当前组件被卸载的时候，关闭链接
+            // 当当前组件被卸载的时候，关闭链接,status改为matching(点击其他页面在回来时，状态变为matching)
             onUnmounted(()=>{
                 socket.close();
+                store.commit("updateStatus","matching");//更新状态为matching
             });
         }
     }

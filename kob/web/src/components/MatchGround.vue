@@ -29,9 +29,13 @@
 
 <script>
 import {ref} from 'vue'
+// 全局变量
+import {useStore} from 'vuex'
 
 export default {
     setup(){
+        const store=useStore();
+
         let match_btn_info=ref("开始匹配");
         // 创建一个变量match_btn_info，用来存储按钮的文字
 
@@ -39,8 +43,17 @@ export default {
         const click_match_btn=()=>{
             if(match_btn_info.value==="开始匹配"){
                 match_btn_info.value="取消匹配";
+                // 开始匹配的话是cliet像后端发送一个请求，告诉后端我要开始匹配
+                store.state.pk.socket.send(JSON.stringify({//可以发送字符串，把json封装成字符串
+                    event:"start-matching",//向后端传一个域,后端可以onMessage接收到请求
+
+                }));
             }else{
                 match_btn_info.value="开始匹配";
+                store.state.pk.socket.send(JSON.stringify({//可以发送字符串，把json封装成字符串
+                    event:"stop-matching",//传一个域
+
+                }));
             }
         }
         return{

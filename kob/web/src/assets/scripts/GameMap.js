@@ -10,13 +10,14 @@ import { Wall } from "./Wall";
 import { Snake } from "./Snake";
 
 export class GameMap extends AcGameObject {
-    constructor(ctx, parent) {//传入两个元素，一个是画布，一个是父元素，父元素用来动态修改画布的长宽
+    constructor(ctx, parent,store) {//传入两个元素，一个是画布，一个是父元素，父元素用来动态修改画布的长宽。 传入store是为了在这里存储游戏地图的状态
         super();
 
         this.ctx = ctx;
         this.parent = parent;
         //游戏地图会动态变化，成比例的变化，不用绝对距离，用相对距离
         //每个格子存绝对距离，坐标存相对距离
+        this.store=store;//存储游戏地图的状态
         this.L=0;//绝对距离，L表示一个单位的长度
         
         // 行数和列数，13*13的地图
@@ -39,87 +40,89 @@ export class GameMap extends AcGameObject {
         ];
     }
 
-    // 判断地图是否联通的函数,参考算法基础课的迷宫问题和flood fill算法
-    check_connectivity(g, sx, sy, tx, ty) {//传入一个地图，起始点横坐标，纵坐标和终点横坐标，纵坐标
-        if(sx==tx && sy==ty) return true;//如果起始点和终点重合，就是联通的
-        g[sx][sy]=true;//否则标记为走过了
+    // 判断地图是否联通的函数,参考算法基础课的迷宫问题和flood fill算法.已经在后端Game.java实现，所以注释掉
+    // check_connectivity(g, sx, sy, tx, ty) {//传入一个地图，起始点横坐标，纵坐标和终点横坐标，纵坐标
+    //     if(sx==tx && sy==ty) return true;//如果起始点和终点重合，就是联通的
+    //     g[sx][sy]=true;//否则标记为走过了
 
-        // 定义上下左右四个方向，偏移量dx,dy(复习语法题蛇形矩阵里讲过)
-        let dx=[-1, 0, 1, 0];
-        let dy=[0, 1, 0, -1];
-        for (let i = 0; i < 4; i ++ ){
-            let x=sx+dx[i], y=sy+dy[i];
-            // 如果没有撞墙，且可以走到终点，就返回true
-            if(!g[x][y] && this.check_connectivity(g, x, y, tx, ty)) {
-                return true;
-            }
-        }
-        // 如果四个方向都走不通，就返回false
-        return false;
-    }
+    //     // 定义上下左右四个方向，偏移量dx,dy(复习语法题蛇形矩阵里讲过)
+    //     let dx=[-1, 0, 1, 0];
+    //     let dy=[0, 1, 0, -1];
+    //     for (let i = 0; i < 4; i ++ ){
+    //         let x=sx+dx[i], y=sy+dy[i];
+    //         // 如果没有撞墙，且可以走到终点，就返回true
+    //         if(!g[x][y] && this.check_connectivity(g, x, y, tx, ty)) {
+    //             return true;
+    //         }
+    //     }
+    //     // 如果四个方向都走不通，就返回false
+    //     return false;
+    // }
 
     // 创建一个辅助函数，用来生成墙
     create_walls() {
-        // 开一个数组，存墙，有墙的话是true，没有墙是false
-        const g=[];
-        for (let r = 0; r < this.rows; r ++ ){
-            g[r]=[];
-            for (let c = 0; c < this.cols; c ++ ){
-                // 一开始全都是false
-                g[r][c]=false;
-            }
-        }
-        // 给四周加墙
-        // 左右两端加上墙
-        for (let r = 0; r < this.rows; r ++ ){
-            // 第一列和最后一列都是墙
-            g[r][0]=true;//左端
-            g[r][this.cols-1]=true;//右端
+        // // 开一个数组，存墙，有墙的话是true，没有墙是false
+        // const g=[];
+        // for (let r = 0; r < this.rows; r ++ ){
+        //     g[r]=[];
+        //     for (let c = 0; c < this.cols; c ++ ){
+        //         // 一开始全都是false
+        //         g[r][c]=false;
+        //     }
+        // }
+        // // 给四周加墙
+        // // 左右两端加上墙
+        // for (let r = 0; r < this.rows; r ++ ){
+        //     // 第一列和最后一列都是墙
+        //     g[r][0]=true;//左端
+        //     g[r][this.cols-1]=true;//右端
 
-        }
-        // 上下两端加上墙
-        for (let c = 0; c < this.cols; c ++ ){
-            // 第一行和最后一行都是墙
-            g[0][c]=true;//上端
-            g[this.rows-1][c]=true;//下端
-        }
+        // }
+        // // 上下两端加上墙
+        // for (let c = 0; c < this.cols; c ++ ){
+        //     // 第一行和最后一行都是墙
+        //     g[0][c]=true;//上端
+        //     g[this.rows-1][c]=true;//下端
+        // }
         
-        // 创建随机障碍物
-        // 随机障碍物，只随机一半，因为是对称的
-        for (let i = 0; i < this.inner_walls_count/2; i ++ ){
-            // 随机重复的话，就重新生成 ,这里设置了一个随机次数1000次，死循环，直到找到空位置
-            for(let j=0;j<1000;j++){
-                // 行的随机值
-                let r=parseInt(Math.random()*this.rows);
-                // 列的随机值
-                let c=parseInt(Math.random()*this.cols);
+        // // 创建随机障碍物
+        // // 随机障碍物，只随机一半，因为是对称的
+        // for (let i = 0; i < this.inner_walls_count/2; i ++ ){
+        //     // 随机重复的话，就重新生成 ,这里设置了一个随机次数1000次，死循环，直到找到空位置
+        //     for(let j=0;j<1000;j++){
+        //         // 行的随机值
+        //         let r=parseInt(Math.random()*this.rows);
+        //         // 列的随机值
+        //         let c=parseInt(Math.random()*this.cols);
 
-                // 判断一下当前这个位置有没有障碍物，有的话就继续循环
-                // 这是障碍物轴对称
-                // if(g[r][c] || g[c][r]) continue;
-                // 修改为中心对称
-                if(g[r][c]||g[this.rows-1-r][this.cols-1-c]) continue;
+        //         // 判断一下当前这个位置有没有障碍物，有的话就继续循环
+        //         // 这是障碍物轴对称
+        //         // if(g[r][c] || g[c][r]) continue;
+        //         // 修改为中心对称
+        //         if(g[r][c]||g[this.rows-1-r][this.cols-1-c]) continue;
 
-                // 如果障碍物在左上角或者右上角，即两条蛇的起始位置，就继续循环
-                if((r==this.rows-2&&c==1)||(r==1&&c==this.cols-2)) continue;
+        //         // 如果障碍物在左上角或者右上角，即两条蛇的起始位置，就继续循环
+        //         if((r==this.rows-2&&c==1)||(r==1&&c==this.cols-2)) continue;
 
-                // 否则的话，就把这个位置设置为true
-                // g[r][c] = g[c][r] = true;
-                // 这里也修改为中心对称
-                g[r][c] = g[this.rows-1-r][this.cols-1-c] = true;
+        //         // 否则的话，就把这个位置设置为true
+        //         // g[r][c] = g[c][r] = true;
+        //         // 这里也修改为中心对称
+        //         g[r][c] = g[this.rows-1-r][this.cols-1-c] = true;
 
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
 
-        // 检查地图是否联通，先把g复制下来，因为check_connectivity会改变g
-        const copy_g = JSON.parse(JSON.stringify(g));//先复制在重新生成一遍
+        // // 检查地图是否联通，先把g复制下来，因为check_connectivity会改变g
+        // const copy_g = JSON.parse(JSON.stringify(g));//先复制在重新生成一遍
 
         
-        // 如果不联通
-        if(!this.check_connectivity(copy_g, this.rows-2, 1, 1, this.cols-2)) 
-            return false;
+        // // 如果不联通
+        // if(!this.check_connectivity(copy_g, this.rows-2, 1, 1, this.cols-2)) 
+        //     return false;
 
+
+        const g=this.store.state.pk.gamemap;//从store里面取出地图，已经在后端生成了
         // 生成墙，遍历，如果是true，就是墙
         for (let r = 0; r < this.rows; r ++ ){
             for (let c = 0; c < this.cols; c ++ ){
@@ -129,7 +132,7 @@ export class GameMap extends AcGameObject {
             }
         }
         // 如果左下角和右上角联通，返回true
-        return true;
+        // return true;
         // 如果不联通，可以在上面写一个判断函数判断是否联通
     }
 
@@ -154,13 +157,16 @@ export class GameMap extends AcGameObject {
     }
 
     start() {   //只执行一次
-        // // 调用一下创建墙的函数
-        // this.create_walls();
+        // // // 调用一下创建墙的函数
+        // // this.create_walls();
 
-        // 防止浏览器崩掉，这里设置一个一千次循环，如果创建墙失败，就继续创建
-        for (let i = 0; i < 1000; i ++ ){
-            if(this.create_walls()) break;
-        }
+        // // 防止浏览器崩掉，这里设置一个一千次循环，如果创建墙失败，就继续创建
+        // for (let i = 0; i < 1000; i ++ ){
+        //     if(this.create_walls()) break;
+        // }
+
+        // 不需要调用一千次了，在后端已经实现了，所以注释掉
+        this.create_walls();
         this.add_listening_events();
     }
 
