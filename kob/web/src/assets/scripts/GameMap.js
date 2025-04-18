@@ -142,17 +142,29 @@ export class GameMap extends AcGameObject {
         this.ctx.canvas.focus();
 
         // 先取出两个蛇
-        const [snake0, snake1] = this.snakes;
+        // const [snake0, snake1] = this.snakes;
         // 获取信息有一个api
         this.ctx.canvas.addEventListener("keydown", e => {
-            if(e.key==='i') snake0.set_direction(0);//上是0
-            else if(e.key==='l') snake0.set_direction(1);//右是1
-            else if(e.key==='k') snake0.set_direction(2);//下是2
-            else if(e.key==='j') snake0.set_direction(3);//左是3
-            else if(e.key==='ArrowUp') snake1.set_direction(0);//上是0
-            else if(e.key==='ArrowRight') snake1.set_direction(1);//右是1
-            else if(e.key==='ArrowDown') snake1.set_direction(2);//下是2
-            else if(e.key==='ArrowLeft') snake1.set_direction(3);//左是3
+            let d=-1;
+            if(e.key==='i') d=0;//上是0
+            else if(e.key==='l') d=1;//右是1
+            else if(e.key==='k') d=2;//下是2
+            else if(e.key==='j') d=3;//左是3
+
+            if(d>=0){//是合法操作，要向后端发送移动请求指令
+                this.store.state.pk.socket.send(JSON.stringify({
+                    event:"move",
+                    direction:d,
+                }));
+            }
+            // if(e.key==='i') snake0.set_direction(0);//上是0
+            // else if(e.key==='l') snake0.set_direction(1);//右是1
+            // else if(e.key==='k') snake0.set_direction(2);//下是2
+            // else if(e.key==='j') snake0.set_direction(3);//左是3
+            // else if(e.key==='ArrowUp') snake1.set_direction(0);//上是0
+            // else if(e.key==='ArrowRight') snake1.set_direction(1);//右是1
+            // else if(e.key==='ArrowDown') snake1.set_direction(2);//下是2
+            // else if(e.key==='ArrowLeft') snake1.set_direction(3);//左是3
         });
     }
 

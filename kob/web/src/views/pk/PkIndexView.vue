@@ -19,6 +19,8 @@
     <PlayGround v-if="$store.state.pk.status==='playing'"/>
     <!-- 当status是playing而不是matching时候展示 -->
     <MatchGround v-if="$store.state.pk.status==='matching'"/>
+    <!-- 有人去世时候展示，为什么不是status=finished？ -->
+    <ResultBoard v-if="$store.state.pk.loser!='none'"/>
 </template>
 
 <script>
@@ -41,10 +43,13 @@
     // 引入全局变量
     import { useStore } from 'vuex'
 
+    import ResultBoard from '../../components/ResultBoard.vue'
+
     export default {
         components: {
             PlayGround,
             MatchGround,
+            ResultBoard,
         },
         setup(){
             const store = useStore();
@@ -76,9 +81,29 @@
                         // 加个延迟
                         setTimeout(()=>{
                             store.commit("updateStatus","playing");//更新状态为playing
-                        },2000);
+                        },200);
                         // 更新地图
-                        store.commit("updateGamemap",data.gamemap);//更新地图
+                        store.commit("updateGame",data.game);//更新地图
+                    }else if(data.event==="move"){//
+                        console.log(data);
+                        const game=store.state.pk.gameObject;
+                        const [snake0,snake1]=game.snakes;//两条蛇
+                        // 获取两条蛇的移动方向
+                        snake0.set_direction(data.a_direction);
+                        snake1.set_direction(data.b_direction);
+                    }else if(data.event==="result"){
+                        console.log(data);
+                        const game=store.state.pk.gameObject;
+                        const [snake0,snake1]=game.snakes;//两条蛇
+
+                        if(data.loser==="all"||data.loser==="A"){
+                            snake0.status="die";//判断失败
+                        }
+                        if(data.loser==="all"||data.loser==="B"){
+                            snake1.status="die";
+                        }
+                        // 更新loser
+                        store.commit("updateLoser",data.loser);//更新loser
                     }
                 }
 

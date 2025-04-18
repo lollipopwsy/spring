@@ -99,10 +99,11 @@ export class Snake extends AcGameObject {
             this.cells[i]=JSON.parse(JSON.stringify(this.cells[i-1]));//这里要先把他转换成一个json然后再把它解析出来，不然会出现引用问题
         }
 
-        // 如果下一个位置不合法也就是下一步操作撞了，蛇死亡
-        if(!this.gamemap.check_valid(this.next_cell)){
-            this.status="die";
-        }
+        // 放后端判断
+        // // 如果下一个位置不合法也就是下一步操作撞了，蛇死亡
+        // if(!this.gamemap.check_valid(this.next_cell)){
+        //     this.status="die";
+        // }
 
         // 每次nextstep时候都要更新蛇的方向
         this.eye_direction=d;

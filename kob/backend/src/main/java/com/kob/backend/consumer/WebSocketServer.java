@@ -3,6 +3,7 @@ package com.kob.backend.consumer;
 import com.alibaba.fastjson2.JSONObject;
 import com.kob.backend.consumer.utils.Game;
 import com.kob.backend.consumer.utils.JwtAuthentication;
+import com.kob.backend.mapper.RecordMapper;
 import com.kob.backend.mapper.User1Mapper;
 import com.kob.backend.pojo.User1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,18 @@ public class WebSocketServer {
 
 //    查询需要用到usermapper
     private static User1Mapper user1Mapper;//和controller里面的不一样
+    public static RecordMapper recordMapper;
 //    传地图
     private Game game=null;
 
     @Autowired
     public void setUser1Mapper(User1Mapper user1Mapper) {
-
         WebSocketServer.user1Mapper = user1Mapper;
+    }
+
+    @Autowired
+    public void setRecordMapper(RecordMapper recordMapper) {
+        WebSocketServer.recordMapper = recordMapper;
     }
 
     @OnOpen
@@ -74,16 +80,31 @@ public class WebSocketServer {
             matchpool.remove(a);
             matchpool.remove(b);
 
-            Game game=new Game(13,14,20);//先存到局部里面
+            Game game=new Game(13,14,20,a.getId(),b.getId());//先存到局部里面
             game.createMap();//初始化地图
+            game.start();//进入线程
 
+            users.get(a.getId()).game=game;
+            users.get(b.getId()).game=game;
+
+//            和地图相关的各种信息封装成一个Json
+            JSONObject respGame =new JSONObject();
+//            把左下角和右上角的id传进去
+            respGame.put("a_id",game.getPlayerA().getId());
+            respGame.put("a_sx",game.getPlayerA().getSx());
+            respGame.put("a_sy",game.getPlayerA().getSy());
+            respGame.put("b_id",game.getPlayerB().getId());
+            respGame.put("b_sx",game.getPlayerB().getSx());
+            respGame.put("b_sy",game.getPlayerB().getSy());
+
+            respGame.put("map",game.getG());
 
 //            配对成功后删除，并且传给a和b很多信息
             JSONObject respA= new JSONObject();
             respA.put("event","start-matching");//传入操作类型
             respA.put("opponent",b.getUsername());//传入a的对手名
             respA.put("opponent_photo",b.getPhoto());//传入a的对手头像
-            respA.put("gamemap",game.getG());//返回地图
+            respA.put("game",respGame);//返回地图
 //            获取a的链接,并且这个链接要向前端发送信息
             users.get(a.getId()).sendMessage(respA.toJSONString());
 
@@ -91,7 +112,7 @@ public class WebSocketServer {
             respB.put("event","start-matching");//传入操作类型
             respB.put("opponent",a.getUsername());//传入b的对手名
             respB.put("opponent_photo",a.getPhoto());//传入b的对手头像
-            respB.put("gamemap",game.getG());
+            respB.put("game",respGame);
 //            获取b的链接,并且这个链接要向前端发送信息
             users.get(b.getId()).sendMessage(respB.toJSONString());
 
@@ -102,6 +123,14 @@ public class WebSocketServer {
     private void stopMatching(){
         System.out.println("stopMatching");
         matchpool.remove(this.user1);
+    }
+
+    private void move(int direction){
+        if(game.getPlayerA().getId().equals(user1.getId())){
+            game.setNextStepA(direction);
+        }else if(game.getPlayerB().getId().equals(user1.getId())){
+            game.setNextStepB(direction);
+        }
     }
 
     @OnMessage
@@ -117,6 +146,8 @@ public class WebSocketServer {
             startMatching();
         }else if("stop-matching".equals(event)){
             stopMatching();
+        }else if("move".equals(event)){
+            move(data.getInteger("direction"));
         }
     }
 
