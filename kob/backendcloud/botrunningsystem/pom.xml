@@ -46,18 +46,18 @@
 <!--        动态编译执行用户代码-->
         <!-- https://mvnrepository.com/artifact/org.jooq/joor -->
 <!--        我自己一开始的依赖，但是报错-->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>joor</artifactId>
-            <version>0.9.15</version>
-        </dependency>
-
-<!--        看评论的依赖降到jdk8对应版本0.9.13，Consumer代码里的Reflect标红并且报错没有导入-->
 <!--        <dependency>-->
 <!--            <groupId>org.jooq</groupId>-->
-<!--            <artifactId>joor-java-8</artifactId>-->
-<!--            <version>0.9.13</version>-->
+<!--            <artifactId>joor</artifactId>-->
+<!--            <version>0.9.15</version>-->
 <!--        </dependency>-->
+
+<!--        看评论的依赖降到jdk8对应版本0.9.13，Consumer代码里的Reflect标红并且报错没有导入-->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joor-java-8</artifactId>
+            <version>0.9.15</version>
+        </dependency>
 
 <!--        看评论的依赖降到jdk8对应版本0.9.14，Consumer代码里的Reflect标红并且报错没有导入-->
         <!-- https://mvnrepository.com/artifact/org.jooq/joor-java-8 -->

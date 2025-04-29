@@ -17,6 +17,10 @@
                         <label for="confirmedPassword" class="form-label">确认密码</label>
                         <input v-model="confirmedPassword" type="password" class="form-control" id="confirmedPassword" placeholder="请再次输入密码">
                     </div>
+                    <div class="mb-3">
+                        <label for="qq" class="form-label">QQ号</label>
+                        <input v-model="qq" type="text" class="form-control" id="qq" placeholder="请输入QQ号">
+                    </div>
                     <!-- 密码错误报错信息 -->
                     <div class="error-message">{{error_message}}</div>
                     <button type="submit" class="btn btn-primary">提交</button>
@@ -42,6 +46,7 @@
             let username = ref('');
             let password = ref('');
             let confirmedPassword = ref('');
+            let qq = ref('');
             let error_message = ref('');
 
             // 触发函数
@@ -55,6 +60,7 @@
                         username:username.value,
                         password:password.value,
                         confirmedPassword:confirmedPassword.value,
+                        qq:qq.value,
                     },
                     success(resp){
                         if(resp.error_message==="success"){
@@ -70,6 +76,7 @@
                 username,
                 password,
                 confirmedPassword,
+                qq,
                 error_message,
                 register,
             }

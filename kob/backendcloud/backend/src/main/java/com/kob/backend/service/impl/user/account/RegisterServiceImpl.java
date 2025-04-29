@@ -22,7 +22,7 @@ public class RegisterServiceImpl implements RegisterService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Map<String, String> register(String username, String password, String confirmedPassword) {
+    public Map<String, String> register(String username, String password, String confirmedPassword, String qq) {
         Map<String, String> map = new HashMap<>();
         if(username==null){
             map.put("error_message","用户名不能为空！");
@@ -36,6 +36,10 @@ public class RegisterServiceImpl implements RegisterService {
         username = username.trim();//删除收尾空白字符
         if(username.length()==0){
             map.put("error_message","用户名不能为空！");
+            return map;
+        }
+        if(qq==null || qq.trim().length()==0){
+            map.put("error_message","QQ号不能为空！");
             return map;
         }
 
@@ -73,7 +77,8 @@ public class RegisterServiceImpl implements RegisterService {
         //成功后存到数据库
         //密码加密
         String encodedPassword = passwordEncoder.encode(password);
-        String photo="https://cdn.acwing.com/media/user/profile/photo/96356_lg_30e2a9f1af.jpg";
+//        String photo="https://cdn.acwing.com/media/user/profile/photo/96356_lg_30e2a9f1af.jpg";
+        String photo = String.format("http://q.qlogo.cn/headimg_dl?dst_uin=%s&spec=640&img_type=jpg", qq);
         User1 user1 = new User1(null,username,encodedPassword,photo,1500);//id是自增的，这里不需要存
         user1Mapper.insert(user1);
 
