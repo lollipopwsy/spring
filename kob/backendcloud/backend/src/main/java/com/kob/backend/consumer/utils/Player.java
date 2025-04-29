@@ -13,6 +13,8 @@ import java.util.List;
 public class Player {
 //    用户id
     private Integer id;
+    private Integer botId;//botId=-1表示人操作，否则表ai
+    private String botCode;
 //    起始坐标
     private Integer sx;
     private Integer sy;
